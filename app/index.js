@@ -5,6 +5,6 @@ import hikesRoutes from "../routes/hikes-routes.js";
 
 const app = express();
 
-app.use(hikesRoutes);
+app.use("/api/hikes", hikesRoutes);
 
 app.listen(5000);
