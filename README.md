@@ -1,22 +1,32 @@
-# Node Starter
+# **TrailHikes**
 
-## TLDR
+_server-side using NodeJS, Express and MongoDB_
 
-Use of this starter template assumes that you have a 'complete dev environment' setup - a terminal, Node, VS Code, at least. If not, you may want to [start here.](https://www.notion.so/codefinity/Setting-up-a-Local-Dev-Environment-for-JS-02a4e9f4a30043d3a8e7d109be3448f4)
+## Overview
 
-1. Click that big green button to start using it.
-2. `clone` your new repo from your GitHub to your local computer
-3. `cd` into the `clone`d repo and enter: `npm i`.
-4. `npm start`
+This is a personal hiking application that lets you keep track of hikes you've done. It also shows other users and the hikes they've done.
 
-## Some of What's Included
+## Primary Objectives
 
-- [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
-- Various VS Code 'settings' and 'extensions.' Look in the bottom right when you open this up in VS Code to install them.
-- Jest for testing: `npm test`. It's using BabelJS so Jest can handle ESModules.
+- Create a User.
+- View any/all of your hikes.
+- Change data in any of your hikes.
+- Location of hike using **_Google Maps_**.
+- Add a photo of the hike.
+- View other User's hikes.
 
-## How To Use
+## Secondary Objectives
 
-Run `npm i` to get all the things installed.
+- View Users that have done a particular hike.
+- Add a messaging/blog page.
+- Get a list of potential hikes from API.
+- Add multiple photos of a hike.
+- GPS tracking of your particular hike.
 
-`npm start` will watch the `app` directory for any changes using `nodemon`
+## Sample Data Structure
+
+## Routes
+
+## Data
+
+## External API's
