@@ -1,1 +1,10 @@
-export const add2Nums = (num1, num2) => num1 + num2;
+import express from "express";
+import bodyParser from "body-parser";
+
+import hikesRoutes from "../routes/hikes-routes.js";
+
+const app = express();
+
+app.use(hikesRoutes);
+
+app.listen(5000);
