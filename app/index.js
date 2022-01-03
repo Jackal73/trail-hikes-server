@@ -1,9 +1,11 @@
 import express from "express";
-import bodyParser from "body-parser";
 
 import hikesRoutes from "../routes/hikes-routes.js";
 
 const app = express();
+
+// Middleware that allows express to read incoming json requests
+app.use(express.json());
 
 app.use("/api/hikes", hikesRoutes);
 
