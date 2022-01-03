@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 import HttpError from "../models/http-error.js";
 
 const DUMMY_HIKES = [
@@ -42,5 +44,24 @@ const getHikeByUserId = (req, res, next) => {
   res.json({ hike });
 };
 
+const createHike = (req, res, next) => {
+  const { title, description, coordinates, address, creator } = req.body;
+  // const title = req.body.title, ...;
+
+  const createdHike = {
+    id: uuidv4(),
+    title,
+    description,
+    location: coordinates,
+    address,
+    creator,
+  };
+
+  DUMMY_HIKES.push(createdHike); // unshift (createdHike) - first element
+
+  res.status(201).json({ place: createdHike });
+};
+
 exports.getHikeById = getHikeById;
 exports.getHikeByUserId = getHikeByUserId;
+exports.createHike = createHike;

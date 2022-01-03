@@ -8,4 +8,6 @@ router.get("/:pid", hikesController.getHikeById);
 
 router.get("/user/:uid", hikesController.getHikeByUserId);
 
+router.post("/", hikesController.createHike);
+
 export default router;
