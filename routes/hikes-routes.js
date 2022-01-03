@@ -1,5 +1,7 @@
 import { Router } from "express";
 
+import HttpError from "../models/http-error.js";
+
 const router = new Router();
 
 const DUMMY_HIKES = [
@@ -22,9 +24,9 @@ router.get("/:pid", (req, res, next) => {
   const hike = DUMMY_HIKES.find((p) => p.id === hikeId);
 
   if (!hike) {
-    const error = new Error("Could not find a hike for the specified pid.");
-    error.code = 404;
-    throw error;
+    return next(
+      new HttpError("No hike was found for the specified hike id.", 404)
+    );
   }
 
   res.json({ hike }); // { hike } => { hike: hike }
@@ -36,11 +38,11 @@ router.get("/user/:uid", (req, res, next) => {
   const hike = DUMMY_HIKES.find((p) => p.creator === userId);
 
   if (!hike) {
-    const error = new Error("Could not find a hike for the specified user id.");
-    error.code = 404;
-    return next(error);
-  }
+    return next(
+      new HttpError("No hike(s) could be found for the specified user id.", 404)
+    );
 
   res.json({ hike });
 });
+
 export default router;
