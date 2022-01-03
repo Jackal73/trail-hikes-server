@@ -1,6 +1,6 @@
 # **TrailHikes**
 
-_server-side using NodeJS, Express and MongoDB_
+_server-side using NodeJS, ExpressJS and MongoDB_
 
 ## Overview
 
