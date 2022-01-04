@@ -1,6 +1,7 @@
 import express from "express";
 
 import hikesRoutes from "../routes/hikes-routes.js";
+import usersRoutes from "../routes/users-routes.js";
 import HttpError from "../models/http-error.js";
 
 const app = express();
@@ -9,6 +10,7 @@ const app = express();
 app.use(express.json());
 
 app.use("/api/hikes", hikesRoutes);
+app.use("/api/users", usersRoutes);
 
 app.use((req, res, next) => {
   const error = new HttpError("Could not find this route", 404);
