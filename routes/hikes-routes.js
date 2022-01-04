@@ -11,4 +11,7 @@ router.get("/user/:uid", hikesController.getHikeByUserId);
 router.post("/", hikesController.createHike);
 
 router.patch("/:pid", hikesController.updateHike);
+
+router.delete("/:pid", hikesController.deleteHike);
+
 export default router;

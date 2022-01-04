@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import HttpError from "../models/http-error.js";
 
-const DUMMY_HIKES = [
+let DUMMY_HIKES = [
   {
     id: "p1",
     title: "Python Minion Trail",
