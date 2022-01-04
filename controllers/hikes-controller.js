@@ -1,4 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
+import { validationResult } from "express-validator";
+
 import HttpError from "../models/http-error.js";
 
 let DUMMY_HIKES = [
@@ -48,6 +50,12 @@ export default {
   },
 
   createHike(req, res, next) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log(errors);
+      throw new HttpError("Invalid inputs... please check your data.", 422);
+    }
+
     const { title, description, coordinates, address, creator } = req.body;
     // const title = req.body.title, ...;
 
