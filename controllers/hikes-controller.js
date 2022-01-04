@@ -64,4 +64,27 @@ export default {
 
     res.status(201).json({ hike: createdHike });
   },
+
+  updateHike(req, res, next) {
+    const { title, description } = req.body;
+    const hikeId = req.params.pid;
+
+    const updatedHike = { ...DUMMY_HIKES.find((p) => p.id === hikeId) };
+    const hikeIndex = DUMMY_HIKES.findIndex((p) => p.id === hikeId);
+
+    updatedHike.title = title;
+    updatedHike.description = description;
+
+    DUMMY_HIKES[hikeIndex] = updatedHike;
+
+    res.status(200).json({ hike: updatedHike });
+  },
+
+  deleteHike(req, res, next) {
+    const hikeId = req.params.pid;
+
+    DUMMY_HIKES = DUMMY_HIKES.filter((p) => p.id !== hikeId);
+
+    res.status(200).json({ message: "Deleted place." });
+  },
 };
