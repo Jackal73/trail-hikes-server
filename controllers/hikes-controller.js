@@ -30,21 +30,21 @@ export default {
     res.json({ hike }); // { hike } => { hike: hike }
   },
 
-  getHikeByUserId(req, res, next) {
+  getHikesByUserId(req, res, next) {
     const userId = req.params.uid;
 
-    const hike = DUMMY_HIKES.find((p) => p.creator === userId);
+    const hikes = DUMMY_HIKES.filter((p) => p.creator === userId);
 
-    if (!hike) {
+    if (!hikes || hikes.length === 0) {
       return next(
         new HttpError(
-          "No hike(s) could be found for the specified user id.",
+          "There were no hikes found for the specified user id.",
           404
         )
       );
     }
 
-    res.json({ hike });
+    res.json({ hikes });
   },
 
   createHike(req, res, next) {
@@ -85,6 +85,6 @@ export default {
 
     DUMMY_HIKES = DUMMY_HIKES.filter((p) => p.id !== hikeId);
 
-    res.status(200).json({ message: "Deleted place." });
+    res.status(200).json({ message: "Hike Deleted..." });
   },
 };

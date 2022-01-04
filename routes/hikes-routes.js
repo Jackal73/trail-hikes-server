@@ -6,7 +6,7 @@ const router = new Router();
 
 router.get("/:pid", hikesController.getHikeById);
 
-router.get("/user/:uid", hikesController.getHikeByUserId);
+router.get("/user/:uid", hikesController.getHikesByUserId);
 
 router.post("/", hikesController.createHike);
 
