@@ -52,7 +52,6 @@ export default {
   createHike(req, res, next) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      console.log(errors);
       throw new HttpError("Invalid inputs... please check your data.", 422);
     }
 
@@ -74,6 +73,11 @@ export default {
   },
 
   updateHike(req, res, next) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      throw new HttpError("Invalid inputs... please check your data.", 422);
+    }
+
     const { title, description } = req.body;
     const hikeId = req.params.pid;
 
@@ -90,6 +94,9 @@ export default {
 
   deleteHike(req, res, next) {
     const hikeId = req.params.pid;
+    if (!DUMMY_HIKES.find((p) => p.id === hikeId)) {
+      throw new HttpError("Could not find a place for that id.", 404);
+    }
 
     DUMMY_HIKES = DUMMY_HIKES.filter((p) => p.id !== hikeId);
 

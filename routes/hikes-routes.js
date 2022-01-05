@@ -18,7 +18,11 @@ router.post(
   hikesController.createHike
 );
 
-router.patch("/:pid", hikesController.updateHike);
+router.patch(
+  "/:pid",
+  [check("title").not().isEmpty(), check("description").isLength({ min: 7 })],
+  hikesController.updateHike
+);
 
 router.delete("/:pid", hikesController.deleteHike);
 
