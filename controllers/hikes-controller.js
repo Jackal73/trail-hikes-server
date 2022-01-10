@@ -1,5 +1,5 @@
 import { validationResult } from "express-validator";
-import { v4 as uuidv4 } from "uuid";
+import Hike from "../models/hike.js";
 import HttpError from "../models/http-error.js";
 import getCoordsForAddress from "../util/location.js";
 
@@ -67,16 +67,25 @@ export default {
     }
 
     // const title = req.body.title, ...;
-    const createdHike = {
-      id: uuidv4(),
+    const createdHike = new Hike({
       title,
       description,
-      location: coordinates,
       address,
+      location: coordinates,
+      image:
+        "https://image.shutterstock.com/image-photo/two-friends-travel-mountains-backpacks-600w-1434031928.jpg",
       creator,
-    };
+    });
 
-    DUMMY_HIKES.push(createdHike); // unshift (createdHike) - first element
+    try {
+      await createdHike.save();
+    } catch (err) {
+      const error = new HttpError(
+        "Creating hike failed, please try again.",
+        500
+      );
+      return next(error);
+    }
 
     res.status(201).json({ hike: createdHike });
   },
