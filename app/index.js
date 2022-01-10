@@ -1,8 +1,8 @@
 import express from "express";
-
+import mongoose from "mongoose";
+import HttpError from "../models/http-error.js";
 import hikesRoutes from "../routes/hikes-routes.js";
 import usersRoutes from "../routes/users-routes.js";
-import HttpError from "../models/http-error.js";
 
 const app = express();
 
@@ -26,4 +26,13 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || "An unknown error occurred!" });
 });
 
-app.listen(5000);
+mongoose
+  .connect(
+    "mongodb+srv://Shawn:Yoshi1988@cluster0.kaflr.mongodb.net/hikes?retryWrites=true&w=majority"
+  )
+  .then(() => {
+    app.listen(5000);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
