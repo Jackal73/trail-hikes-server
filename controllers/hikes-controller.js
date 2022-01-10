@@ -3,20 +3,6 @@ import Hike from "../models/hike.js";
 import HttpError from "../models/http-error.js";
 import getCoordsForAddress from "../util/location.js";
 
-let DUMMY_HIKES = [
-  {
-    id: "p1",
-    title: "Python Minion Trail",
-    description: "Beautiful stone bridge halfway through hike!",
-    address: "Rolla, Mo",
-    location: {
-      lat: 37.951424,
-      lng: -91.768959,
-    },
-    creator: "u1",
-  },
-];
-
 export default {
   async getHikeById(req, res, next) {
     const hikeId = req.params.pid; // { pid: 'p1' }
@@ -148,13 +134,29 @@ export default {
     res.status(200).json({ hike: hike.toObject({ getters: true }) });
   },
 
-  deleteHike(req, res, next) {
+  async deleteHike(req, res, next) {
     const hikeId = req.params.pid;
-    if (!DUMMY_HIKES.find((p) => p.id === hikeId)) {
-      throw new HttpError("Could not find a place for that id.", 404);
+
+    let hike;
+    try {
+      hike = await Hike.findById(hikeId);
+    } catch (err) {
+      const error = new HttpError(
+        "Something went wrong, could not delete hike.",
+        500
+      );
+      return next(error);
     }
 
-    DUMMY_HIKES = DUMMY_HIKES.filter((p) => p.id !== hikeId);
+    try {
+      await hike.remove();
+    } catch (err) {
+      const error = new HttpError(
+        "Something went wrong, could not delete hike.",
+        500
+      );
+      return next(error);
+    }
 
     res.status(200).json({ message: "Hike Deleted..." });
   },
