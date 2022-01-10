@@ -112,7 +112,7 @@ export default {
     res.status(201).json({ hike: createdHike });
   },
 
-  updateHike(req, res, next) {
+  async updateHike(req, res, next) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       throw new HttpError("Invalid inputs... please check your data.", 422);
@@ -121,15 +121,31 @@ export default {
     const { title, description } = req.body;
     const hikeId = req.params.pid;
 
-    const updatedHike = { ...DUMMY_HIKES.find((p) => p.id === hikeId) };
-    const hikeIndex = DUMMY_HIKES.findIndex((p) => p.id === hikeId);
+    let hike;
+    try {
+      hike = await Hike.findById(hikeId);
+    } catch (err) {
+      const error = new HttpError(
+        "Something went wrong, could not update hike.",
+        500
+      );
+      return next(error);
+    }
 
-    updatedHike.title = title;
-    updatedHike.description = description;
+    hike.title = title;
+    hike.description = description;
 
-    DUMMY_HIKES[hikeIndex] = updatedHike;
+    try {
+      await hike.save();
+    } catch (err) {
+      const error = new HttpError(
+        "Something went wrong, could not update hike.",
+        500
+      );
+      return next(error);
+    }
 
-    res.status(200).json({ hike: updatedHike });
+    res.status(200).json({ hike: hike.toObject({ getters: true }) });
   },
 
   deleteHike(req, res, next) {
