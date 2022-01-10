@@ -43,10 +43,19 @@ export default {
     res.json({ hike: hike.toObject({ getters: true }) }); // => { hike } => { hike: hike }
   },
 
-  getHikesByUserId(req, res, next) {
+  async getHikesByUserId(req, res, next) {
     const userId = req.params.uid;
 
-    const hikes = DUMMY_HIKES.filter((p) => p.creator === userId);
+    let hikes;
+    try {
+      hikes = await Hike.find({ creator: userId });
+    } catch (err) {
+      const error = new HttpError(
+        "Fetching hikes failed, please try again later.",
+        500
+      );
+      return next(error);
+    }
 
     if (!hikes || hikes.length === 0) {
       return next(
@@ -57,7 +66,9 @@ export default {
       );
     }
 
-    res.json({ hikes });
+    res.json({
+      hikes: hikes.map((hike) => hike.toObject({ getters: true })),
+    });
   },
 
   async createHike(req, res, next) {
