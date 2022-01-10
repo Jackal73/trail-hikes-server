@@ -1,7 +1,7 @@
-import { v4 as uuidv4 } from "uuid";
 import { validationResult } from "express-validator";
-
+import { v4 as uuidv4 } from "uuid";
 import HttpError from "../models/http-error.js";
+import getCoordsForAddress from "../util/location.js";
 
 let DUMMY_HIKES = [
   {
@@ -49,15 +49,24 @@ export default {
     res.json({ hikes });
   },
 
-  createHike(req, res, next) {
+  async createHike(req, res, next) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      throw new HttpError("Invalid inputs... please check your data.", 422);
+      return next(
+        new HttpError("Invalid inputs... please check your data.", 422)
+      );
     }
 
-    const { title, description, coordinates, address, creator } = req.body;
-    // const title = req.body.title, ...;
+    const { title, description, address, creator } = req.body;
 
+    let coordinates;
+    try {
+      coordinates = await getCoordsForAddress(address);
+    } catch (error) {
+      return next(error);
+    }
+
+    // const title = req.body.title, ...;
     const createdHike = {
       id: uuidv4(),
       title,
