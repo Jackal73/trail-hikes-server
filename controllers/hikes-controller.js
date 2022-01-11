@@ -1,7 +1,10 @@
+import mongoose from "mongoose";
 import { validationResult } from "express-validator";
 import Hike from "../models/hike.js";
+import User from "../models/user.js";
 import HttpError from "../models/http-error.js";
 import getCoordsForAddress from "../util/location.js";
+import mongooseUniqueValidator from "mongoose-unique-validator";
 
 export default {
   async getHikeById(req, res, next) {
@@ -85,8 +88,32 @@ export default {
       creator,
     });
 
+    let user;
+
     try {
-      await createdHike.save();
+      user = await User.findById(creator);
+    } catch (err) {
+      const error = new HttpError(
+        "Creating a hike failed, please try again.",
+        500
+      );
+      return next(error);
+    }
+
+    if (!user) {
+      const error = new HttpError("User not found with that id", 404);
+      return next(error);
+    }
+
+    console.log(user);
+
+    try {
+      const sesion = await mongoose.startSession();
+      sesion.startTransaction();
+      await createdHike.save({ session: sesion });
+      user.hikes.push(createdHike);
+      await user.save({ session: sesion });
+      await sesion.commitTransaction();
     } catch (err) {
       const error = new HttpError(
         "Creating hike failed, please try again.",

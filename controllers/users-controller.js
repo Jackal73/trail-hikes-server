@@ -35,7 +35,7 @@ export default {
       );
     }
 
-    const { name, email, password, hikes } = req.body;
+    const { name, email, password } = req.body;
 
     let existingUser;
     try {
@@ -62,7 +62,7 @@ export default {
       image:
         "https://image.shutterstock.com/z/stock-photo-businessman-multitasking-510805411.jpg",
       password,
-      hikes,
+      hikes: [],
     });
 
     try {
