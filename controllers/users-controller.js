@@ -12,8 +12,19 @@ const DUMMY_USERS = [
 ];
 
 export default {
-  getUsers(req, res, next) {
-    res.json({ users: DUMMY_USERS });
+  async getUsers(req, res, next) {
+    let users;
+    try {
+      users = await User.find({}, "name email");
+    } catch (err) {
+      const error = new HttpError(
+        "Fetching Users failed, please try again later.",
+        500
+      );
+      return next(error);
+    }
+
+    res.json({ users: users.map((user) => user.toObject({ getters: true })) });
   },
 
   async signup(req, res, next) {
