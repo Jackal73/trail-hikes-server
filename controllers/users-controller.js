@@ -49,9 +49,8 @@ export default {
 
     const identifiedUser = DUMMY_USERS.find((u) => u.email === email);
     if (!identifiedUser || identifiedUser.password !== password) {
-      throw new HttpError(
-        "User is not recognized... invalid credentials.",
-        401
+      return next(
+        new HttpError("User is not recognized... invalid credentials.", 401)
       );
     }
 
