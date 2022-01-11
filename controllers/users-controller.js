@@ -1,6 +1,4 @@
-import { v4 as uuidv4 } from "uuid";
 import { validationResult } from "express-validator";
-
 import HttpError from "../models/http-error.js";
 import User from "../models/user.js";
 
@@ -66,14 +64,23 @@ export default {
     res.status(201).json({ user: createdUser.toObject({ getters: true }) });
   },
 
-  login(req, res, next) {
+  async login(req, res, next) {
     const { email, password } = req.body;
 
-    const identifiedUser = DUMMY_USERS.find((u) => u.email === email);
-    if (!identifiedUser || identifiedUser.password !== password) {
-      return next(
-        new HttpError("User is not recognized... invalid credentials.", 401)
+    let existingUser;
+    try {
+      existingUser = await User.findOne({ email });
+    } catch (err) {
+      const error = new HttpError("Login failed, please try again later.", 500);
+      return next(error);
+    }
+
+    if (!existingUser || existingUser.password !== password) {
+      const error = new HttpError(
+        "Invalid credentials. . . Login failed!",
+        401
       );
+      return next(error);
     }
 
     res.json({ message: "Logged in!" });
