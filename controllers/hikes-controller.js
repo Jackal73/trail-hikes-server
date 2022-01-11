@@ -1,10 +1,9 @@
-import mongoose from "mongoose";
 import { validationResult } from "express-validator";
+import mongoose from "mongoose";
 import Hike from "../models/hike.js";
-import User from "../models/user.js";
 import HttpError from "../models/http-error.js";
+import User from "../models/user.js";
 import getCoordsForAddress from "../util/location.js";
-import mongooseUniqueValidator from "mongoose-unique-validator";
 
 export default {
   async getHikeById(req, res, next) {
@@ -168,7 +167,7 @@ export default {
 
     let hike;
     try {
-      hike = await Hike.findById(hikeId);
+      hike = await Hike.findById(hikeId).populate("creator");
     } catch (err) {
       const error = new HttpError(
         "Something went wrong, could not delete hike.",
@@ -177,8 +176,18 @@ export default {
       return next(error);
     }
 
+    if (!hike) {
+      const error = new HttpError("Could not find a hike for this id.", 404);
+      return next(error);
+    }
+
     try {
-      await hike.remove();
+      const sesion = await mongoose.startSession();
+      sesion.startTransaction();
+      await hike.remove({ session: sesion });
+      hike.creator.hikes.pull(hike);
+      await hike.creator.save({ session: sesion });
+      await sesion.commitTransaction();
     } catch (err) {
       const error = new HttpError(
         "Something went wrong, could not delete hike.",
