@@ -34,9 +34,10 @@ export default {
   async getHikesByUserId(req, res, next) {
     const userId = req.params.uid;
 
-    let hikes;
+    // let hikes;
+    let userWithHikes;
     try {
-      hikes = await Hike.find({ creator: userId });
+      userWithHikes = await User.findById(userId).populate("hikes");
     } catch (err) {
       const error = new HttpError(
         "Fetching hikes failed, please try again later.",
@@ -45,7 +46,8 @@ export default {
       return next(error);
     }
 
-    if (!hikes || hikes.length === 0) {
+    // if (!hikes || hikes.length === 0) {
+    if (!userWithHikes || userWithHikes.hikes.length === 0) {
       return next(
         new HttpError(
           "There were no hikes found for the specified user id.",
@@ -55,7 +57,9 @@ export default {
     }
 
     res.json({
-      hikes: hikes.map((hike) => hike.toObject({ getters: true })),
+      hikes: userWithHikes.hikes.map((hike) =>
+        hike.toObject({ getters: true })
+      ),
     });
   },
 
