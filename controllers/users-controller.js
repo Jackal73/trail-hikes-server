@@ -2,15 +2,6 @@ import { validationResult } from "express-validator";
 import HttpError from "../models/http-error.js";
 import User from "../models/user.js";
 
-const DUMMY_USERS = [
-  {
-    id: "u1",
-    name: "Shawn Kebel",
-    email: "test@test.com",
-    password: "tester",
-  },
-];
-
 export default {
   async getUsers(req, res, next) {
     let users;

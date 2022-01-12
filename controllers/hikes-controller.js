@@ -7,7 +7,7 @@ import getCoordsForAddress from "../util/location.js";
 
 export default {
   async getHikeById(req, res, next) {
-    const hikeId = req.params.pid; // { pid: 'p1' }
+    const hikeId = req.params.pid;
 
     let hike;
     try {
@@ -28,7 +28,7 @@ export default {
       return next(error);
     }
 
-    res.json({ hike: hike.toObject({ getters: true }) }); // => { hike } => { hike: hike }
+    res.json({ hike: hike.toObject({ getters: true }) });
   },
 
   async getHikesByUserId(req, res, next) {
@@ -80,7 +80,6 @@ export default {
       return next(error);
     }
 
-    // const title = req.body.title, ...;
     const createdHike = new Hike({
       title,
       description,
