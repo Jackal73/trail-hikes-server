@@ -28,7 +28,7 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    "mongodb+srv://Shawn:Yoshi1988@cluster0.kaflr.mongodb.net/hikes?retryWrites=true&w=majority"
+    "mongodb+srv://Shawn:Yoshi1988@cluster0.kaflr.mongodb.net/TrailHikesApp?retryWrites=true&w=majority"
   )
   .then(() => {
     app.listen(5000);
