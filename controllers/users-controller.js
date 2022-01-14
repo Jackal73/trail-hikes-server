@@ -6,7 +6,7 @@ export default {
   async getUsers(req, res, next) {
     let users;
     try {
-      users = await User.find({}, "name email");
+      users = await User.find({}, "-password");
     } catch (err) {
       const error = new HttpError(
         "Fetching Users failed, please try again later.",
@@ -85,6 +85,9 @@ export default {
       return next(error);
     }
 
-    res.json({ message: "Logged in!" });
+    res.json({
+      message: "Logged in!",
+      user: existingUser.toObject({ getters: true }),
+    });
   },
 };
