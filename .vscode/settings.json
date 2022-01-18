@@ -10,7 +10,7 @@
   "editor.formatOnSave": true,
   "eslint.alwaysShowStatus": true,
   "editor.fontFamily": "JetBrains Mono",
-  "editor.fontSize": 16,
+  "editor.fontSize": 18,
   "editor.fontLigatures": true,
   "editor.scrollBeyondLastColumn": 2,
   "editor.smoothScrolling": true,

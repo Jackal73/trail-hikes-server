@@ -116,6 +116,13 @@ export default {
       user.hikes.push(createdHike);
       await user.save({ session: sesion });
       await sesion.commitTransaction();
+      // const session = await mongoose.startSession();
+      // await session.withTransaction(async () => {
+      //   await createdHike.save();
+      //   user.hikes.push(createdHike);
+      //   await user.save();
+      // });
+      // await session.endSession();
     } catch (err) {
       const error = new HttpError(
         "Creating hike failed, please try again.",
