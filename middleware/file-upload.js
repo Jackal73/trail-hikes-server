@@ -19,8 +19,10 @@ const fileUpload = multer({
     },
   }),
   fileFilter: (req, file, cb) => {
-    const isValid = Boolean(MIME_TYPE_MAP[file.mimetype]);
-    const error = isValid ? null : new Error("Invalid mime type!");
+    // eslint-disable-next-line no-implicit-coercion
+    const isValid = !!MIME_TYPE_MAP[file.mimetype];
+    // eslint-disable-next-line prefer-const
+    let error = isValid ? null : new Error("Invalid mime type!");
     cb(error, isValid);
   },
 });

@@ -50,8 +50,7 @@ export default {
     const createdUser = new User({
       name,
       email,
-      image:
-        "https://image.shutterstock.com/z/stock-photo-businessman-multitasking-510805411.jpg",
+      image: req.file.path,
       password,
       hikes: [],
     });

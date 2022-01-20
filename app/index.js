@@ -1,5 +1,7 @@
 import express from "express";
+import fs from "fs";
 import mongoose from "mongoose";
+import path from "path";
 import HttpError from "../models/http-error.js";
 import hikesRoutes from "../routes/hikes-routes.js";
 import usersRoutes from "../routes/users-routes.js";
@@ -8,6 +10,8 @@ const app = express();
 
 // Middleware that allows express to read incoming json requests
 app.use(express.json());
+
+app.use("/uploads/images", express.static(path.join("uploads", "images")));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -28,6 +32,12 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
+  if (req.file) {
+    fs.unlink(req.file.path, (err) => {
+      console.log(err);
+    });
+  }
+
   if (res.headerSent) {
     return next(error);
   }
