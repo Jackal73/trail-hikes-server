@@ -85,8 +85,7 @@ export default {
       description,
       address,
       location: coordinates,
-      image:
-        "https://image.shutterstock.com/image-photo/two-friends-travel-mountains-backpacks-600w-1434031928.jpg",
+      image: req.file.path,
       creator,
     });
 

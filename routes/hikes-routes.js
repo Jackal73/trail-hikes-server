@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { check } from "express-validator";
 import hikesController from "../controllers/hikes-controller.js";
+import fileUpload from "../middleware/file-upload.js";
 
 const router = new Router();
 
@@ -10,6 +11,7 @@ router.get("/user/:uid", hikesController.getHikesByUserId);
 
 router.post(
   "/",
+  fileUpload.single("image"),
   [
     check("title").not().isEmpty(),
     check("description").isLength({ min: 7 }),
