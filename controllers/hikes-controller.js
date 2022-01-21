@@ -1,3 +1,5 @@
+import fs from "fs";
+
 import { validationResult } from "express-validator";
 import mongoose from "mongoose";
 import Hike from "../models/hike.js";
@@ -190,6 +192,8 @@ export default {
       return next(error);
     }
 
+    const imagePath = hike.image;
+
     try {
       const sesion = await mongoose.startSession();
       sesion.startTransaction();
@@ -204,6 +208,10 @@ export default {
       );
       return next(error);
     }
+
+    fs.unlink(imagePath, (err) => {
+      console.log(err);
+    });
 
     res.status(200).json({ message: "Hike Deleted..." });
   },
