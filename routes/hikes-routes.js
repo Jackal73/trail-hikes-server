@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { check } from "express-validator";
+
 import hikesController from "../controllers/hikes-controller.js";
+import checkAuth from "../middleware/check-auth.js";
 import fileUpload from "../middleware/file-upload.js";
 
 const router = new Router();
@@ -8,6 +10,8 @@ const router = new Router();
 router.get("/:pid", hikesController.getHikeById);
 
 router.get("/user/:uid", hikesController.getHikesByUserId);
+
+router.use(checkAuth);
 
 router.post(
   "/",
