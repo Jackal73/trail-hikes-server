@@ -117,13 +117,6 @@ export default {
       user.hikes.push(createdHike);
       await user.save({ session: sesion });
       await sesion.commitTransaction();
-      // const session = await mongoose.startSession();
-      // await session.withTransaction(async () => {
-      //   await createdHike.save();
-      //   user.hikes.push(createdHike);
-      //   await user.save();
-      // });
-      // await session.endSession();
     } catch (err) {
       const error = new HttpError(
         "Creating hike failed, please try again.",
@@ -153,6 +146,14 @@ export default {
       const error = new HttpError(
         "Something went wrong, could not update hike.",
         500
+      );
+      return next(error);
+    }
+
+    if (hike.creator.toString() !== req.userData.userId) {
+      const error = new HttpError(
+        "You are not authorized to EDIT this hike.",
+        401
       );
       return next(error);
     }
@@ -189,6 +190,14 @@ export default {
 
     if (!hike) {
       const error = new HttpError("Could not find a hike for this id.", 404);
+      return next(error);
+    }
+
+    if (hike.creator.id !== req.userData.userId) {
+      const error = new HttpError(
+        "You are not authorized to DELETE this hike.",
+        401
+      );
       return next(error);
     }
 
