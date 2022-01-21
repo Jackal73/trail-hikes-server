@@ -1,4 +1,5 @@
 import { validationResult } from "express-validator";
+import bcrypt from "bcrypt";
 import HttpError from "../models/http-error.js";
 import User from "../models/user.js";
 
@@ -47,11 +48,22 @@ export default {
       return next(error);
     }
 
+    let hashedPassword;
+    try {
+      hashedPassword = await bcrypt.hash(password, 12);
+    } catch (err) {
+      const error = new HttpError(
+        "Could not create user, please try again.",
+        500
+      );
+      next(error);
+    }
+
     const createdUser = new User({
       name,
       email,
       image: req.file.path,
-      password,
+      password: hashedPassword,
       hikes: [],
     });
 
@@ -76,7 +88,26 @@ export default {
       return next(error);
     }
 
-    if (!existingUser || existingUser.password !== password) {
+    if (!existingUser) {
+      const error = new HttpError(
+        "Invalid credentials. . . Login failed!",
+        401
+      );
+      return next(error);
+    }
+
+    let isValidPassword = false;
+    try {
+      isValidPassword = await bcrypt.compare(password, existingUser.password);
+    } catch (err) {
+      const error = new HttpError(
+        "Could not log in, please check credentials and try again.",
+        500
+      );
+      return next;
+    }
+
+    if (!isValidPassword) {
       const error = new HttpError(
         "Invalid credentials. . . Login failed!",
         401
