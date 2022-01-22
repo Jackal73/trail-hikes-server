@@ -1,6 +1,5 @@
-import fs from "fs";
-
 import { validationResult } from "express-validator";
+import fs from "fs";
 import mongoose from "mongoose";
 import Hike from "../models/hike.js";
 import HttpError from "../models/http-error.js";
@@ -73,7 +72,7 @@ export default {
       );
     }
 
-    const { title, description, address, creator } = req.body;
+    const { title, description, address } = req.body;
 
     let coordinates;
     try {
@@ -88,13 +87,13 @@ export default {
       address,
       location: coordinates,
       image: req.file.path,
-      creator,
+      creator: req.userData.userId,
     });
 
     let user;
 
     try {
-      user = await User.findById(creator);
+      user = await User.findById(req.userData.userId);
     } catch (err) {
       const error = new HttpError(
         "Creating a hike failed, please try again.",
